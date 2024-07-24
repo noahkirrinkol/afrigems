@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+}
+html, *{
+  font-family: sans-serif;
+}
+
+.cart-container-format, .cart-item{
+  display: grid;
+  grid-template-columns: 0.5fr 3fr 0.5fr 0.5fr 0.5fr 0.5fr;
+  align-items: center;
+  gap: 20px;
+  padding: 15px 0;
+  color: #454545;
+  text-align: center;
+}
+
+@media(max-width: 500px){
+  .cart-container-format{
+    display:none;
+  }
+
+  .cart-item{
+    grid-template-columns: 0.5fr 3fr 0.5fr;
+    gap:10px;
+  }
+}
