@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { ChangeEvent, FormEvent, forwardRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { ImSpinner2 } from "react-icons/im";
 
 const RegisterModal = forwardRef(() => {
   const [details, setDetails] = useState({
@@ -11,7 +12,7 @@ const RegisterModal = forwardRef(() => {
   });
   const [showPassword, setShowPassword] = useState(false);
 
-  const { register } = useAuth();
+  const { register, loading } = useAuth();
 
   const navigate = useNavigate();
 
@@ -86,9 +87,14 @@ const RegisterModal = forwardRef(() => {
 
           <button
             type="submit"
-            className="w-full p-2 bg-primaryColor text-white font-semibold text-lg rounded-md"
+            className="w-full p-2 bg-primaryColor text-white font-semibold text-lg rounded-md flex items-center justify-center"
+            disabled={loading}
           >
-            Sign Up
+            {loading ? (
+              <ImSpinner2 className="animate-spin" size={25} />
+            ) : (
+              "Register"
+            )}
           </button>
         </form>
       </div>

@@ -11,6 +11,7 @@ interface AuthContextType {
   register: (name: string, username: string, password: string) => Promise<void>;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
+  loading: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -19,6 +20,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("access")
   );
+  const [loading, setLoading] = useState(false);
   const isAuthenticated = !!token;
 
   const navigate = useNavigate();
@@ -28,6 +30,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
     email: string,
     password: string
   ) => {
+    setLoading(true);
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BASE_URL}/user/register`,
@@ -76,10 +79,13 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
         draggable: true,
         progress: undefined,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   const login = async (email: string, password: string) => {
+    setLoading(true);
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BASE_URL}/user/login`,
@@ -130,6 +136,8 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
         draggable: true,
         progress: undefined,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -144,6 +152,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
     register,
     login,
     isAuthenticated,
+    loading,
   };
 
   return (

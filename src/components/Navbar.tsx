@@ -86,9 +86,9 @@ const Navbar = () => {
 
                 <button
                   onClick={handleOpenRegisterModal}
-                  className="font-medium p-2 rounded-lg bg-primaryColor text-white"
+                  className="font-medium py-2 px-4 rounded-lg bg-primaryColor text-white"
                 >
-                  Sign Up
+                  Register
                 </button>
               </div>
             )}

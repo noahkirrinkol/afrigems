@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, forwardRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { ImSpinner2 } from "react-icons/im";
 
 const LoginModal = forwardRef(() => {
   const [credentials, setCredentials] = useState({
@@ -9,7 +10,7 @@ const LoginModal = forwardRef(() => {
   });
   const [showPassword, setShowPassword] = useState(false);
 
-  const { login } = useAuth();
+  const { login, loading } = useAuth();
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     setCredentials((prev) => {
@@ -40,7 +41,6 @@ const LoginModal = forwardRef(() => {
             onChange={handleChange}
             className="border border-gray p-2 focus:outline-primaryColor rounded-md"
           />
-
           <div className="flex items-center gap-1 pr-2 border border-gray focus:outline-primaryColor rounded-md">
             <input
               type={showPassword ? "text" : "password"}
@@ -67,9 +67,14 @@ const LoginModal = forwardRef(() => {
 
           <button
             type="submit"
-            className="w-full p-2 bg-primaryColor text-white font-semibold text-lg rounded-md"
+            className="w-full p-2 bg-primaryColor text-white font-semibold text-lg rounded-md flex items-center justify-center"
+            disabled={loading}
           >
-            Sign In
+            {loading ? (
+              <ImSpinner2 className="animate-spin" size={25} />
+            ) : (
+              "Login"
+            )}
           </button>
         </form>
       </div>
