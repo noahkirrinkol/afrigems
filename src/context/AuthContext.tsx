@@ -33,7 +33,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/user/register`,
+        `${import.meta.env.VITE_BASE_URL}api/v1/user/register`,
         {
           method: "POST",
           headers: {
@@ -88,7 +88,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/user/login`,
+        `${import.meta.env.VITE_BASE_URL}api/v1/user/login`,
         {
           method: "POST",
           headers: {
