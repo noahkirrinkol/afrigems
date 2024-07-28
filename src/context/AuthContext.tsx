@@ -1,9 +1,10 @@
 /* eslint-disable react-refresh/only-export-components */
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { User } from "../types/user";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -12,6 +13,7 @@ interface AuthContextType {
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
   loading: boolean;
+  userDetails: User | null;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -21,9 +23,61 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.getItem("access")
   );
   const [loading, setLoading] = useState(false);
+  const [userDetails, setUserDetails] = useState<User | null>(null);
+
   const isAuthenticated = !!token;
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated && token) {
+      fetchUserDetails(token);
+    }
+  }, [isAuthenticated, token]);
+
+  const fetchUserDetails = async (token: string) => {
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/user/profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        setUserDetails(data.data);
+      } else {
+        toast.error(data.error, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to fetch admin details.", error);
+      // toast.error("Failed to fetch admin details. Try again later.", {
+      //   position: "top-center",
+      //   autoClose: 5000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   progress: undefined,
+      // });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const register = async (
     username: string,
@@ -153,6 +207,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
     login,
     isAuthenticated,
     loading,
+    userDetails,
   };
 
   return (
