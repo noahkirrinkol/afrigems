@@ -17,7 +17,7 @@ const Navbar = () => {
 
   const { getTotalCartItems } = useCart();
 
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, userDetails } = useAuth();
 
   const handleOpenLoginModal = () => {
     setIsLoginModalOpen(true);
@@ -67,14 +67,17 @@ const Navbar = () => {
             </li>
 
             {isAuthenticated ? (
-              <li>
+              <div className="flex items-center gap-2">
+                {userDetails && (
+                  <h2 className="text-normal">Hello, {userDetails.username}</h2>
+                )}
                 <button
                   onClick={handleLogout}
-                  className="font-medium p-2 rounded-lg hover:bg-primaryColor hover:text-white"
+                  className="font-medium py-2 px-4 rounded-lg bg-primaryColor text-white"
                 >
                   Log out
                 </button>
-              </li>
+              </div>
             ) : (
               <div className="flex gap-2 md:gap-4">
                 <button
