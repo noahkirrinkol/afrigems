@@ -11,6 +11,7 @@ import Footer from "./components/Footer";
 import { useSearch } from "./context/SearchContext";
 
 import SearchResultsPage from "./pages/SearchResultsPage";
+import Checkout from "./pages/Checkout";
 
 function App() {
   const { searchTerm } = useSearch();
@@ -23,6 +24,7 @@ function App() {
         <Route path="/" element={<Home />} />
 
         <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
 
         <Route path="/necklace" element={<Category category="necklace" />} />
         <Route path="/earrings" element={<Category category="earrings" />} />

@@ -3,6 +3,8 @@ import { ChangeEvent, FormEvent, forwardRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { ImSpinner2 } from "react-icons/im";
+import { Modal } from "@mui/material";
+import LoginModal from "./LoginModal";
 
 const RegisterModal = forwardRef(() => {
   const [details, setDetails] = useState({
@@ -11,6 +13,8 @@ const RegisterModal = forwardRef(() => {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
   const { register, loading } = useAuth();
 
@@ -28,6 +32,18 @@ const RegisterModal = forwardRef(() => {
     await register(details.username, details.email, details.password);
     navigate("/");
   }
+  const handleOpenLoginModal = () => {
+    setIsLoginModalOpen(true);
+    setIsRegisterModalOpen(false);
+  };
+
+  const handleCloseLoginModal = () => {
+    setIsLoginModalOpen(false);
+  };
+
+  const handleCloseRegisterModal = () => {
+    setIsRegisterModalOpen(false);
+  };
 
   return (
     <div className="bg-white absolute w-[90%] md:w-1/2 h-[360px] left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-md">
@@ -85,6 +101,16 @@ const RegisterModal = forwardRef(() => {
             )}
           </div>
 
+          <small className="text-center">
+            Already have an account?{" "}
+            <button
+              onClick={handleOpenLoginModal}
+              className="underline text-primaryColor font-semibold"
+            >
+              Login
+            </button>
+          </small>
+
           <button
             type="submit"
             className="w-full p-2 bg-primaryColor text-white font-semibold text-lg rounded-md flex items-center justify-center"
@@ -96,6 +122,22 @@ const RegisterModal = forwardRef(() => {
               "Register"
             )}
           </button>
+
+          <Modal
+            open={isLoginModalOpen}
+            onClose={handleCloseLoginModal}
+            aria-labelledby="Login modal"
+          >
+            <LoginModal />
+          </Modal>
+
+          <Modal
+            open={isRegisterModalOpen}
+            onClose={handleCloseRegisterModal}
+            aria-labelledby="Register modal"
+          >
+            <RegisterModal />
+          </Modal>
         </form>
       </div>
     </div>

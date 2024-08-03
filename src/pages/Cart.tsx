@@ -1,8 +1,14 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import { Modal } from "@mui/material";
+import LoginModal from "../components/LoginModal";
+import { Link } from "react-router-dom";
 
 const Cart: FC = () => {
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
   const {
     products,
     cart,
@@ -10,6 +16,16 @@ const Cart: FC = () => {
     getTotalCartAmount,
     getTotalCartItems,
   } = useCart();
+
+  const { isAuthenticated, loading } = useAuth();
+
+  const handleOpenLoginModal = () => {
+    setIsLoginModalOpen(true);
+  };
+
+  const handleCloseLoginModal = () => {
+    setIsLoginModalOpen(false);
+  };
 
   return (
     <section className="p-4 pt-40 lg:pt-36 w-full xl:max-w-7xl xl:mx-auto">
@@ -82,27 +98,31 @@ const Cart: FC = () => {
                 </div>
               </div>
 
-              {/* <button disabled className="py-2 md:py-4 outline-none border-none bg-primaryColor text-white text-base font-semibold cursor-pointer">
-                Proceed to Checkout
-              </button> */}
-            </div>
-
-            {/* <div className="flex-1 text-base font-medium">
-              <p className="text-secondaryColor">
-                If you have a promo code, Enter it here
-              </p>
-
-              <div className="w-full lg:w-[504px] flex justify-between mt-4">
-                <input
-                  type="text"
-                  placeholder="Promo code"
-                  className="border-none outline-none bg-[#eaeaea] text-base w-3/4 py-2 px-3"
-                />
-                <button className="w-1/4 py-2 cursor-pointer text-base bg-black text-white">
-                  Submit
+              {isAuthenticated ? (
+                <Link
+                  to={"/checkout"}
+                  className="py-2 md:py-4 outline-none border-none bg-primaryColor text-white text-center text-base font-semibold cursor-pointer"
+                >
+                  Proceed to Checkout
+                </Link>
+              ) : (
+                <button
+                  disabled={loading}
+                  className="py-2 md:py-4 outline-none border-none bg-primaryColor text-white text-base font-semibold cursor-pointer"
+                  onClick={handleOpenLoginModal}
+                >
+                  Login
                 </button>
-              </div>
-            </div> */}
+              )}
+
+              <Modal
+                open={isLoginModalOpen}
+                onClose={handleCloseLoginModal}
+                aria-labelledby="Login modal"
+              >
+                <LoginModal />
+              </Modal>
+            </div>
           </div>
         </div>
       )}
