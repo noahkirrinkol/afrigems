@@ -26,6 +26,7 @@ const LoginModal = forwardRef(() => {
     event.preventDefault();
 
     await login(credentials.email, credentials.password);
+    handleCloseLoginModal();
   }
 
   const handleCloseLoginModal = () => {
