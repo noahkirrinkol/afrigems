@@ -53,7 +53,7 @@ const RegisterModal = forwardRef(() => {
           className="flex flex-col gap-4 w-full md:w-[500px]"
         >
           <h2 className="font-bold text-3xl text-primaryColor text-center">
-            Sign Up
+            Register
           </h2>
           <input
             type="text"
