@@ -55,8 +55,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error: any) {
       const errorMessage =
-        error.response?.data?.message ||
-        "Failed to fetch user details. Try again later.";
+        error.message || "Failed to fetch user details. Try again later.";
       console.error(errorMessage, error);
       toast.error(errorMessage, {
         position: "top-center",
@@ -105,10 +104,20 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
           draggable: true,
           progress: undefined,
         });
+      } else {
+        toast.error(data.message, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } catch (error: any) {
       const errorMessage =
-        error.response?.message || "Something went wrong! Try again later.";
+        error.message || "Something went wrong! Try again later.";
       toast.error(errorMessage, {
         position: "top-center",
         autoClose: 5000,
@@ -153,10 +162,21 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
           progress: undefined,
         });
         navigate("/");
+      } else {
+        navigate("/login");
+        toast.error(data.message, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } catch (error: any) {
       const errorMessage =
-        error.response?.message || "Something went wrong! Try again later.";
+        error.message || "Something went wrong! Try again later.";
       toast.error(errorMessage, {
         position: "top-center",
         autoClose: 5000,
