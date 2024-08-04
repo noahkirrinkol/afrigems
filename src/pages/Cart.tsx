@@ -12,6 +12,7 @@ const Cart: FC = () => {
   const {
     products,
     cart,
+    addToCart,
     removeFromCart,
     getTotalCartAmount,
     getTotalCartItems,
@@ -25,6 +26,18 @@ const Cart: FC = () => {
 
   const handleCloseLoginModal = () => {
     setIsLoginModalOpen(false);
+  };
+
+  const handleIncreaseQuantity = (productId: string) => {
+    addToCart(productId, 1);
+  };
+
+  const handleDecreaseQuantity = (productId: string) => {
+    if (cart[productId] > 1) {
+      addToCart(productId, -1);
+    } else {
+      removeFromCart(productId);
+    }
   };
 
   return (
@@ -43,7 +56,7 @@ const Cart: FC = () => {
             if (cart[product._id] > 0) {
               return (
                 <div key={product._id}>
-                  <div className="cart-item text-sm md:text-base font-normal">
+                  <div className="cart-item text-sm md:text-base font-normal flex items-center gap-2">
                     <img
                       src={product.image}
                       alt={product.title}
@@ -51,13 +64,28 @@ const Cart: FC = () => {
                     />
                     <p>{product.title}</p>
                     <p>Ksh. {product.price}</p>
-                    <button className="border-2 border-gray bg-white">
-                      {cart[product._id]}
-                    </button>
-                    <p>
-                      Ksh.
-                      {(product.price * cart[product._id]).toFixed(2)}
-                    </p>
+                    <div className="flex items-center">
+                      <button
+                        onClick={() => handleDecreaseQuantity(product._id)}
+                        className="px-2 py-1 border border-gray"
+                      >
+                        -
+                      </button>
+                      <input
+                        min="1"
+                        step="1"
+                        value={cart[product._id]}
+                        readOnly
+                        className="border-2 border-gray bg-white w-6 text-center mx-1"
+                      />
+                      <button
+                        onClick={() => handleIncreaseQuantity(product._id)}
+                        className="px-2 py-1 border border-gray"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <p>Ksh. {(product.price * cart[product._id]).toFixed(2)}</p>
                     <div className="flex items-center justify-center cursor-pointer">
                       <IoClose
                         size={22}
@@ -65,7 +93,6 @@ const Cart: FC = () => {
                       />
                     </div>
                   </div>
-
                   <hr />
                 </div>
               );

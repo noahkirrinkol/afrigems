@@ -1,14 +1,12 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useEffect, useState } from "react";
-
-// import { products } from "../data/products";
 import axios from "axios";
 import { Product } from "../types/product";
 
 interface CartContextType {
   products: Product[];
   cart: { [productId: string]: number };
-  addToCart: (productId: string) => void;
+  addToCart: (productId: string, quantity?: number) => void;
   removeFromCart: (productId: string) => void;
   getTotalCartAmount: () => number;
   getTotalCartItems: () => number;
@@ -29,9 +27,7 @@ const CartContextProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       const response = await axios.get(`${BASE_URL}/api/v1/product/all`);
-
       const data: Product[] = response.data.data;
-
       setProducts(data);
     };
 
@@ -42,47 +38,30 @@ const CartContextProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (productId: string) => {
+  const addToCart = (productId: string, quantity: number = 1) => {
     setCart((prevCart) => ({
       ...prevCart,
-      [productId]: (prevCart[productId] || 0) + 1,
+      [productId]: (prevCart[productId] || 0) + quantity,
     }));
   };
 
   const removeFromCart = (productId: string) => {
     setCart((prevCart) => {
-      const updatedCart = {
-        ...prevCart,
-        [productId]: prevCart[productId] - 1,
-      };
-      if (updatedCart[productId] <= 0) {
-        delete updatedCart[productId];
-      }
+      const updatedCart = { ...prevCart };
+      delete updatedCart[productId];
       return updatedCart;
     });
   };
 
   const getTotalCartAmount = () => {
-    let totalAmount = 0;
-
-    Object.entries(cart).forEach(([productId, quantity]) => {
-      const product = products?.find((p) => p._id == productId);
-      if (product) {
-        totalAmount += product.price * quantity;
-      }
-    });
-
-    return totalAmount;
+    return Object.entries(cart).reduce((total, [productId, quantity]) => {
+      const product = products.find((p) => p._id === productId);
+      return product ? total + product.price * quantity : total;
+    }, 0);
   };
 
   const getTotalCartItems = () => {
-    let totalItems = 0;
-
-    Object.values(cart).forEach((quantity) => {
-      totalItems += quantity;
-    });
-
-    return totalItems;
+    return Object.values(cart).reduce((total, quantity) => total + quantity, 0);
   };
 
   const clearCart = () => {
